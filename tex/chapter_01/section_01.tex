@@ -1,0 +1,118 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ordinary Least Squares Linear Regression}
+\label{section:ordinary-least-squares}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+Suppose we have collected $K \in \NN$ measurements $(\bx^{(k)},~\by^{(k)})$ with $k \in \{1, 2, \dots, K\}$,
+where $\bx^{(k)} \in \RR^n$, $\by^{(k)} \in \RR^m$ are our independent and dependent variables, respectively.
+Suppose, further, that we wish to write down a mathematical model for our data,
+%
+\begin{equation}
+    f(\bx) = \hat{\by},
+\end{equation}
+%
+where $\hat{\by}$ is our estimate for $\by$ given $\bx$.
+Assuming a linear relationship
+%
+\begin{equation}
+    \label{equation:linear-model}
+    f(\bx~|~W) = W \bx,
+\end{equation}
+%
+where $W \in \RR^{m \times n}$, we wish to determine the choice of $W$ that provides the "best" fit to our data.
+Here, "best" means that our choice of $W$ minimizes the loss function
+%
+\begin{equation}
+    \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_{k=1}^K ~\big{|}~ W\right) = \frac{1}{2} \sum_{k=1}^K \left\| W \bx^{(k)} - \by^{(k)} \right\|^2,
+\end{equation}
+%
+which is half the sum of squared residuals, \ie, of the point-wise errors in our model given in Eq.~\eqref{equation:linear-model}.
+
+\vspace{\baselineskip}
+How do we go about solving for
+%
+\begin{equation}
+    W^* = \argmin_W \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_k ~\big{|}~ W\right)?
+\end{equation}
+%
+We do so by differentiating the loss function with respect to the matrix elements $W_{\mu\nu}$, with
+$\mu \in \{1, 2, \dots, m\}, \nu \in \{1, 2, \dots, n\}$, and demanding that the derivative vanish:
+%
+\begin{align}
+    \label{equation:l2-loss-minimization}
+    0 &= \pd{}{W_{\mu\nu}} \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_k ~\big{|}~ W\right) \nonumber\\
+      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left\|W \bx^{(k)} - \by^{(k)} \right\|^2 \nonumber\\
+      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^T \left(W \bx^{(k)} - \by^{(k)} \right) \nonumber\\
+      &= \sum_k \left[\pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T \right] \left(W \bx^{(k)} - \by^{(k)} \right).
+\end{align}
+%
+We calculate the derivative term explicitly as
+%
+\begin{align}
+    \pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T &= \pd{}{W_{\mu\nu}} \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right)
+                                                                 \hat{\be}^T_i \nonumber\\
+        &= \sum_{i,j} \left(\delta_{\mu i} \delta_{\nu j} x^{(k)}_j - 0 \right) \hat{\be}^T_i \nonumber\\
+        &= x^{(k)}_\nu \hat{\be}^T_\mu.
+\end{align}
+%
+Substituting this into Eq.~\refeq{equation:l2-loss-minimization} while expanding the remaining term gives
+%
+\begin{align}
+    \label{equation:l2-loss-minimization-differentiated}
+    0 &= \sum_k x^{(k)}_\nu \hat{\be}^T_\mu \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right) \hat{\be}_i \nonumber\\
+      &= \sum_k \sum_{j} \left(W_{\mu j} x^{(k)}_j x^{(k)}_\nu - \delta_{\mu j} y^{(k)}_j x^{(k)}_\nu \right) \nonumber\\
+      &= \sum_k \left((W \bx^{(k)})_\mu x^{(k)}_\nu - y^{(k)}_\mu x^{(k)}_\nu \right).
+\end{align}
+%
+In order to solve this exactly using linear algebra, we define matrices
+%
+\begin{equation}
+    X = \begin{pmatrix}
+        \bx^{(1)} & \bx^{(2)} & \dots & \bx^{(K)}
+    \end{pmatrix} \in \RR^{n \times K}
+\end{equation}
+%
+and
+%
+\begin{equation}
+    Y = \begin{pmatrix}
+        \by^{(1)} & \by^{(2)} & \dots & \by^{(K)}
+    \end{pmatrix} \in \RR^{m \times K}
+\end{equation}
+%
+and rewrite Eq.~\eqref{equation:l2-loss-minimization-differentiated}, eliminating the sum over $k$, 
+%
+\begin{equation}
+    0 = W X X^T - Y X^T.
+\end{equation}
+%
+The solution now follows trivially as
+%
+\begin{equation}
+    W^* = Y X^T (X X^T)^{-1}.
+\end{equation}
+%
+
+\notte{
+    We may also consider more general affine models
+    %
+    \begin{equation}
+        f(\bx ~|~ W, \bb) = W \bx + \bb,
+    \end{equation}
+    %
+    by redefining $\bx$ and $W$ as
+    %
+    \begin{equation}
+        \bx \rightarrow \begin{pmatrix}
+            1 \\
+            \bx
+        \end{pmatrix},
+        \qquad
+        W \rightarrow \begin{pmatrix}
+            \bb & W
+        \end{pmatrix}.
+    \end{equation}
+    %
+    Following this redefinition, the model may be written in the form, Eq.~\eqref{equation:linear-model}, and the solution follows identically as in the above presentation.
+}
