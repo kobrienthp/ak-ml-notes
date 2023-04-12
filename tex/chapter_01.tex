@@ -6,18 +6,25 @@
 %
 Suppose we have collected $K \in \NN$ measurements $(\bx^{(k)},~\by^{(k)})$ with $k \in \{1, 2, \dots, K\}$,
 where $\bx^{(k)} \in \RR^n$, $\by^{(k)} \in \RR^m$ are our independent and dependent variables, respectively.
+Suppose, further, that we wish to write down a mathematical model for our data,
+%
+\begin{equation}
+    f(\bx) = \hat{\by},
+\end{equation}
+%
+where $\hat{\by}$ is our estimate for $\by$ given $\bx$.
 Assuming a linear relationship
 %
 \begin{equation}
     \label{equation:linear-model}
-    W \bx = \by,
+    f(\bx~|~W) = W \bx,
 \end{equation}
 %
 where $W \in \RR^{m \times n}$, we wish to determine the choice of $W$ that provides the "best" fit to our data.
 Here, "best" means that our choice of $W$ minimizes the loss function
 %
 \begin{equation}
-    \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_{k=1}^K) = \frac{1}{2} \sum_{k=1}^K \left( W \bx^{(k)} - \by^{(k)} \right)^2,
+    \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_{k=1}^K ~\big{|}~ W\right) = \frac{1}{2} \sum_{k=1}^K \left\| W \bx^{(k)} - \by^{(k)} \right\|^2,
 \end{equation}
 %
 which is half the sum of squared residuals, \ie, of the point-wise errors in our model given in Eq.~\eqref{equation:linear-model}.
@@ -26,7 +33,7 @@ which is half the sum of squared residuals, \ie, of the point-wise errors in our
 How do we go about solving for
 %
 \begin{equation}
-    W^* = \argmin_W \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_k)?
+    W^* = \argmin_W \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_k ~\big{|}~ W\right)?
 \end{equation}
 %
 We do so by differentiating the loss function with respect to the matrix elements $W_{\mu\nu}$, with
@@ -34,8 +41,8 @@ $\mu \in \{1, 2, \dots, m\}, \nu \in \{1, 2, \dots, n\}$, and demanding that the
 %
 \begin{align}
     \label{equation:l2-loss-minimization}
-    0 &= \pd{}{W_{\mu\nu}} \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_k) \nonumber\\
-      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^2 \nonumber\\
+    0 &= \pd{}{W_{\mu\nu}} \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_k ~\big{|}~ W\right) \nonumber\\
+      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left\|W \bx^{(k)} - \by^{(k)} \right\|^2 \nonumber\\
       &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^T \left(W \bx^{(k)} - \by^{(k)} \right) \nonumber\\
       &= \sum_k \left[\pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T \right] \left(W \bx^{(k)} - \by^{(k)} \right).
 \end{align}
@@ -83,6 +90,29 @@ and rewrite Eq.~\eqref{equation:l2-loss-minimization-differentiated}, eliminatin
 The solution now follows trivially as
 %
 \begin{equation}
-    W = Y X^T (X X^T)^{-1}.
+    W^* = Y X^T (X X^T)^{-1}.
 \end{equation}
 %
+
+\notte{
+    We may also consider more general affine models
+    %
+    \begin{equation}
+        f(\bx ~|~ W, \bb) = W \bx + \bb,
+    \end{equation}
+    %
+    by redefining $\bx$ and $W$ as
+    %
+    \begin{equation}
+        \bx \rightarrow \begin{pmatrix}
+            1 \\
+            \bx
+        \end{pmatrix},
+        \qquad
+        W \rightarrow \begin{pmatrix}
+            \bb & W
+        \end{pmatrix}.
+    \end{equation}
+    %
+    Following this redefinition, the model may be written in the form, Eq.~\eqref{equation:linear-model}, and the solution follows identically as in the above presentation.
+}

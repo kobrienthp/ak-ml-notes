@@ -144,3 +144,11 @@
 \newcommand{\eg}{{\it e.g.}}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
+
+\newlength{\Lnote}
+\newcommand{\notte}[1]{
+    \noindent\rule{\dimexpr\textwidth}{1pt}\\
+    \mbox{}\hspace{-\Lnote}\textbf{Note:~}
+    #1\\[-0.5ex] 
+   \rule{\dimexpr\textwidth}{1pt}
+}
