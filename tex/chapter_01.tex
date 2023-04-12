@@ -10,14 +10,14 @@ Assuming a linear relationship
 %
 \begin{equation}
     \label{equation:linear-model}
-    A \bx = \by,
+    W \bx = \by,
 \end{equation}
 %
-where $A \in \RR^{m \times n}$, we wish to determine the choice of $A$ that provides the "best" fit to our data.
-Here, "best" means that our choice of $A$ minimizes the loss function
+where $W \in \RR^{m \times n}$, we wish to determine the choice of $W$ that provides the "best" fit to our data.
+Here, "best" means that our choice of $W$ minimizes the loss function
 %
 \begin{equation}
-    \mathcal{L}(A | \{(\bx^{(k)}, \by^{(k)})\}_{k=1}^K) = \frac{1}{2} \sum_{k=1}^K \left( A \bx^{(k)} - \by^{(k)} \right)^2,
+    \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_{k=1}^K) = \frac{1}{2} \sum_{k=1}^K \left( W \bx^{(k)} - \by^{(k)} \right)^2,
 \end{equation}
 %
 which is half the sum of squared residuals, \ie, of the point-wise errors in our model given in Eq.~\eqref{equation:linear-model}.
@@ -26,24 +26,24 @@ which is half the sum of squared residuals, \ie, of the point-wise errors in our
 How do we go about solving for
 %
 \begin{equation}
-    A^* = \argmin_A \mathcal{L}(A | \{(\bx^{(k)}, \by^{(k)})\}_k)?
+    W^* = \argmin_W \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_k)?
 \end{equation}
 %
-We do so by differentiating the loss function with respect to the matrix elements $A_{\mu\nu}$, with
+We do so by differentiating the loss function with respect to the matrix elements $W_{\mu\nu}$, with
 $\mu \in \{1, 2, \dots, m\}, \nu \in \{1, 2, \dots, n\}$, and demanding that the derivative vanish:
 %
 \begin{align}
     \label{equation:l2-loss-minimization}
-    0 &= \pd{}{A_{\mu\nu}} \mathcal{L}(A | \{(\bx^{(k)}, \by^{(k)})\}_k) \nonumber\\
-      &= \pd{}{A_{\mu\nu}} \frac{1}{2} \sum_k \left(A \bx^{(k)} - \by^{(k)} \right)^2 \nonumber\\
-      &= \pd{}{A_{\mu\nu}} \frac{1}{2} \sum_k \left(A \bx^{(k)} - \by^{(k)} \right)^T \left(A \bx^{(k)} - \by^{(k)} \right) \nonumber\\
-      &= \sum_k \left[\pd{}{A_{\mu\nu}} \left(A \bx^{(k)} - \by^{(k)} \right)^T \right] \left(A \bx^{(k)} - \by^{(k)} \right).
+    0 &= \pd{}{W_{\mu\nu}} \mathcal{L}(W | \{(\bx^{(k)}, \by^{(k)})\}_k) \nonumber\\
+      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^2 \nonumber\\
+      &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^T \left(W \bx^{(k)} - \by^{(k)} \right) \nonumber\\
+      &= \sum_k \left[\pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T \right] \left(W \bx^{(k)} - \by^{(k)} \right).
 \end{align}
 %
 We calculate the derivative term explicitly as
 %
 \begin{align}
-    \pd{}{A_{\mu\nu}} \left(A \bx^{(k)} - \by^{(k)} \right)^T &= \pd{}{A_{\mu\nu}} \sum_{i,j} \left(A_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right)
+    \pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T &= \pd{}{W_{\mu\nu}} \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right)
                                                                  \hat{\be}^T_i \nonumber\\
         &= \sum_{i,j} \left(\delta_{\mu i} \delta_{\nu j} x^{(k)}_j - 0 \right) \hat{\be}^T_i \nonumber\\
         &= x^{(k)}_\nu \hat{\be}^T_\mu.
@@ -53,9 +53,9 @@ Substituting this into Eq.~\refeq{equation:l2-loss-minimization} while expanding
 %
 \begin{align}
     \label{equation:l2-loss-minimization-differentiated}
-    0 &= \sum_k x^{(k)}_\nu \hat{\be}^T_\mu \sum_{i,j} \left(A_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right) \hat{\be}_i \nonumber\\
-      &= \sum_k \sum_{j} \left(A_{\mu j} x^{(k)}_j x^{(k)}_\nu - \delta_{\mu j} y^{(k)}_j x^{(k)}_\nu \right) \nonumber\\
-      &= \sum_k \left((A \bx^{(k)})_\mu x^{(k)}_\nu - y^{(k)}_\mu x^{(k)}_\nu \right).
+    0 &= \sum_k x^{(k)}_\nu \hat{\be}^T_\mu \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right) \hat{\be}_i \nonumber\\
+      &= \sum_k \sum_{j} \left(W_{\mu j} x^{(k)}_j x^{(k)}_\nu - \delta_{\mu j} y^{(k)}_j x^{(k)}_\nu \right) \nonumber\\
+      &= \sum_k \left((W \bx^{(k)})_\mu x^{(k)}_\nu - y^{(k)}_\mu x^{(k)}_\nu \right).
 \end{align}
 %
 In order to solve this exactly using linear algebra, we define matrices
@@ -77,12 +77,12 @@ and
 and rewrite Eq.~\eqref{equation:l2-loss-minimization-differentiated}, eliminating the sum over $k$, 
 %
 \begin{equation}
-    0 = A X X^T - Y X^T.
+    0 = W X X^T - Y X^T.
 \end{equation}
 %
 The solution now follows trivially as
 %
 \begin{equation}
-    A = Y X^T (X X^T)^{-1}.
+    W = Y X^T (X X^T)^{-1}.
 \end{equation}
 %
