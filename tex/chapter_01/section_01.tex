@@ -9,7 +9,7 @@ where $\bx^{(k)} \in \RR^n$, $\by^{(k)} \in \RR^m$ are our independent and depen
 Suppose, further, that we wish to write down a mathematical model for our data,
 %
 \begin{equation}
-    f(\bx) = \hat{\by},
+    \bv{f}(\bx) = \hat{\by},
 \end{equation}
 %
 where $\hat{\by}$ is our estimate for $\by$ given $\bx$.
@@ -17,7 +17,7 @@ Assuming a linear relationship
 %
 \begin{equation}
     \label{equation:linear-model}
-    f(\bx~|~W) = W \bx,
+    \bv{f}(\bx~|~W) = W \bx,
 \end{equation}
 %
 where $W \in \RR^{m \times n}$, we wish to determine the choice of $W$ that provides the "best" fit to our data.
@@ -44,23 +44,23 @@ $\mu \in \{1, 2, \dots, m\}, \nu \in \{1, 2, \dots, n\}$, and demanding that the
     0 &= \pd{}{W_{\mu\nu}} \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\}_k ~\big{|}~ W\right) \nonumber\\
       &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left\|W \bx^{(k)} - \by^{(k)} \right\|^2 \nonumber\\
       &= \pd{}{W_{\mu\nu}} \frac{1}{2} \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^T \left(W \bx^{(k)} - \by^{(k)} \right) \nonumber\\
-      &= \sum_k \left[\pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T \right] \left(W \bx^{(k)} - \by^{(k)} \right).
+      &= \sum_k \left(W \bx^{(k)} - \by^{(k)} \right)^T \left[\pd{}{W_{\mu\nu}} \left( W \bx^{(k)} - \by^{(k)} \right) \right].
 \end{align}
 %
 We calculate the derivative term explicitly as
 %
 \begin{align}
-    \pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right)^T &= \pd{}{W_{\mu\nu}} \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right)
-                                                                 \hat{\be}^T_i \nonumber\\
-        &= \sum_{i,j} \left(\delta_{\mu i} \delta_{\nu j} x^{(k)}_j - 0 \right) \hat{\be}^T_i \nonumber\\
-        &= x^{(k)}_\nu \hat{\be}^T_\mu.
+    \pd{}{W_{\mu\nu}} \left(W \bx^{(k)} - \by^{(k)} \right) &= \pd{}{W_{\mu\nu}} \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right)
+                                                                 \hat{\be}_i \nonumber\\
+        &= \sum_{i,j} \left(\delta_{\mu i} \delta_{\nu j} x^{(k)}_j - 0 \right) \hat{\be}_i \nonumber\\
+        &= x^{(k)}_\nu \hat{\be}_\mu.
 \end{align}
 %
 Substituting this into Eq.~\refeq{equation:l2-loss-minimization} while expanding the remaining term gives
 %
 \begin{align}
     \label{equation:l2-loss-minimization-differentiated}
-    0 &= \sum_k x^{(k)}_\nu \hat{\be}^T_\mu \sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right) \hat{\be}_i \nonumber\\
+    0 &= \sum_k \left[\sum_{i,j} \left(W_{ij} x^{(k)}_j - \delta_{ij} y^{(k)}_j \right) \hat{\be}^T_i \right] \left(x^{(k)}_\nu \hat{\be}_\mu\right) \nonumber\\
       &= \sum_k \sum_{j} \left(W_{\mu j} x^{(k)}_j x^{(k)}_\nu - \delta_{\mu j} y^{(k)}_j x^{(k)}_\nu \right) \nonumber\\
       &= \sum_k \left((W \bx^{(k)})_\mu x^{(k)}_\nu - y^{(k)}_\mu x^{(k)}_\nu \right).
 \end{align}
@@ -98,7 +98,7 @@ The solution now follows trivially as
     We may also consider more general affine models
     %
     \begin{equation}
-        f(\bx ~|~ W, \bb) = W \bx + \bb,
+        \bv{f}(\bx ~|~ W, \bb) = W \bx + \bb,
     \end{equation}
     %
     by redefining $\bx$ and $W$ as
