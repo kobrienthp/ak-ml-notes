@@ -1,0 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Gradient Descent and Backpropagation}
+\label{section:gradient-descent-and-backpropagation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+\subsection{The Gradient Descent Algorithm}
+%
+%
+At this stage we can readily compose arbitrarily complex models which are suited to solving different kinds of interesting problems.
+All we have to do now is find the right values for our weights matrices by solving the set of equations
+%
+\begin{equation}
+    \pd{}{W^{(l)}_{\mu\nu}} \mathcal{L}\left(\{(\bx^{(k)}, \by^{(k)})\} ~|~ \bv{f}\right) = 0
+\end{equation}
+%
+for all layers, $l$, and all corresponding values of $\mu, \nu$.
+
+To solve this analytically proves to be an impossible task due to the extremely non-linear nature of our models.
+We will, therefore, need to find a way to perform our optimization algorithmically.
+Our goal will be to start at an arbitrary point in parameter space and iteratively approach the optimal configuration using only local information and an algorithm called \textit{gradient descent}.
+To gain some intuition for this method, we consider a simple one-dimensional function $f: \RR \rightarrow \RR$ with a single global minimum as pictured below:
+%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../figures/chapter_01/asdf.png}
+\end{figure}
+%
+\noindent Starting at some point $x_0$, we find we can move towards the minimum if we move in the direction \textit{opposite} the derivative at the point $x_0$.
+From here, we can move to another point which we know is even closer to the minimum of $f$,
+%
+\begin{equation}
+    x_1 = x_0 - \alpha \left{\vphantom{|}} \frac{df}{dx} \right|_{x = x_0}
+\end{equation}
+%
+where $\alpha > 0$ is a small parameter called the \textit{learning rate} which partly determines the size of the steps we take in our iterative approach.
+At this stage we can calculate the derivative of $f$ at the point $x_1$ and take another step towards the minimum to a point $x_2$.
+We can repeat this process as many times as we like or until we satisfy some choice of convergence criteria.
+
+In terms of our neural network loss function $\mathcal{L}$ and weights matrices $\{W^{(l)}\}_{l=1}^{L}$, the gradient descent algorithm reads more generally as
+\begin{enumerate}
+    \item Select an arbitrary starting point in parameter space, $W_0$.
+    \item Calculate the gradient of the loss function at the point $W_0$.
+    \item Update the starting point as $W_{n + 1} = W_n - \alpha \grad_W \mathcal{L}(W_n)$.
+\end{enumerate}
+
+What's nice about this algorithm is that we only need to know what is going on in a small neighborhood of $x_0$ to be able to move towards the minimum.
+This is particularly useful when we have a very high-dimensional parameter space where we have no hopes of visualizing our complicaetd loss function to be minimized.
